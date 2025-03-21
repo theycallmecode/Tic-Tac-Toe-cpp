@@ -125,5 +125,35 @@ void checkBoard(char a[3][3]) {
       i++;
    }
 
-   
+   // check main diagonal
+   i=0,j=0; // reset loop counters
+   while(i<2) {
+      while(j<1) {
+         if ( a[i][j] == ' ' ) {
+            continue;
+         }
+         else if(a[i][j]==a[i+1][j+1]==a[i+2][j+2]) {
+            game = true;
+            return ;
+         }
+         j++;
+      }
+      i++;
+   }
+
+   // check other diagonal
+   i=0,j=2; // reset loop counters
+   while(i<2) {
+      while(j>0) {
+         if ( a[i][j] == ' ' ) {
+            continue;
+         }
+         else if(a[i][j]==a[i+1][j-1]==a[i+2][j-2]) {
+            game = true;
+            return ;
+         }
+         j--;
+      }
+      i++;
+   }
 }
