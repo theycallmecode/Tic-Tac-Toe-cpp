@@ -108,5 +108,22 @@ void checkBoard(char a[3][3]) {
       }
       i++;
    }
+
+   // check columns
+   i=0,j=0; // reset loop counters
+   while(i<2) {
+      while(j<1) {
+         if ( a[i][j] == ' ' ) {
+            continue;
+         }
+         else if(a[i][j]==a[i+1][j] && a[i][j]==a[i+2][j]) {
+            game = true;
+            return ;
+         }
+         j++;
+      }
+      i++;
+   }
+
    
 }
