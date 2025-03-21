@@ -3,7 +3,9 @@
 #include<iostream>
 using namespace std;
 
-// dsiplay the board
+
+
+// display the board
 void displayBoard(char board[3][3]) {
    // cout<<endl;
 
@@ -41,9 +43,19 @@ int takeInput(char board[3][3], int turns) {
    return 0;
 }
 
+// function to fill the board with space
+void fillBoard(char board[3][3]) {
+   for(int i=0; i<3; i++) {
+      for(int j=0; j<3; j++) {
+         board[i][j]=' ';
+      }
+   }
+}
+
 int main() {
    char board[3][3];
    int turns = 9;
+   fillBoard(board);
 
    for( int i=1; i<=9; i++ ) {
       turns++;
