@@ -1,159 +1,156 @@
-// creating a tic tac toe game using c++
-
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-// function declarations
-void displayBoard(char board[3][3]);
+// Function declarations
 void fillBoard(char board[3][3]);
-void toPlay(char board[3][3]);
-int takeInput(char board[3][3]);
-void checkBoard(char board[3][3]);
-
-
-// global variables
-int turns = 1; // keeps track of turns
-bool game = false; // game status
-int i=0, j=0; // loop counters
+void displayBoard(char board[3][3]);
+bool makeMove(char board[3][3], int player);
+bool checkWin(char board[3][3], char symbol);
+bool isBoardFull(char board[3][3]);
+void playGame();
 
 
 int main() {
-   // declare a 3x3 matrix for the game 
-   char board[3][3];
+   cout << "Welcome to Tic Tac Toe!\n";
+   cout << "Player 1 = 'X', Player 2 = 'O'\n";
 
-   // fucntion call to fill the board with empty spaces
-   fillBoard(board);
-
-   // function call to start the game
-   toPlay(board);
-
-   if(game) cout<<endl<<"Player WINS";
-   else cout<<endl<<"DRAW";
+   playGame();
 
    return 0;
 }
 
 
-// function to fill the board with space
+// Main game logic
+void playGame() {
+   char board[3][3];
+   fillBoard(board);
+   int currentPlayer = 1;
+   bool gameWon = false;
+
+   while(!gameWon && !isBoardFull(board)) {
+      displayBoard(board);
+
+      // Keep asking for input until a valid move is made
+      while (!makeMove(board, currentPlayer)) {
+         // Loop until valid move
+      }
+
+      // Check for win after move
+      char symbol = (currentPlayer == 1) ? 'X' : 'O';
+
+      if (checkWin(board, symbol)) {
+         displayBoard(board);
+         cout << "Player " << currentPlayer << " wins!\n";
+         gameWon = true;
+      }
+      else {
+         currentPlayer = (currentPlayer == 1) ? 2 : 1; // Switch players
+      }
+   }
+
+   // If no one wins and board is full, it's a draw
+   if(!gameWon) {
+      displayBoard(board);
+      cout << "It's a draw!\n";
+   }
+
+   // Ask to play again
+   char playAgain;
+   cout << "Play again? (y/n): ";
+   cin >> playAgain;
+
+   if (playAgain == 'y' || playAgain == 'Y') {
+      playGame(); // Recursive call to restart
+   }
+   else {
+      cout << "Thanks for playing!\n";
+   }
+}
+
+
+// Initialize the board with empty spaces
 void fillBoard(char board[3][3]) {
-   for(int i=0; i<3; i++) {
-      for(int j=0; j<3; j++) {
-         board[i][j]=' ';
+   for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+         board[i][j] = ' ';
       }
    }
 }
 
 
-// function to start the game 
-void toPlay(char board[3][3]) {
-   // loop to take input in the board
-   for( int i=1; i<=9; i++ ) {
-      takeInput(board);
-
-      // fucntion call to display the game board
-      displayBoard(board);
-      turns++;
+// Display the board with grid lines
+void displayBoard(char board[3][3]) {
+   cout <<endl;
+   for (int i = 0; i < 3; i++) {
+      cout<<" "<<board[i][0]<<" | "<<board[i][1]<<" | "<<board[i][2]<<"\n";
+      
+      if (i < 2) cout << "-----------\n";
    }
+   cout << endl;
 }
 
-
-// function to take input in the board
-int takeInput(char board[3][3]) {
+// Handle player move with input validation
+bool makeMove(char board[3][3], int player) {
+   char symbol = (player == 1) ? 'X' : 'O';
    int row, col;
-   cout << "Enter row & column (0-2): ";
+
+   cout<<"Player "<<player<<" ("<<symbol<<"), enter row (0-2) and column (0-2): ";
    cin >> row >> col;
 
-   if(turns%2==0) { // player 2 turn
-      board[row][col]='X';
-   }
-   else { // player 1 turn
-      board[row][col]='O';
-   }
-
-   // function call to check the board status
-   if(turns>4) {
-      checkBoard(board);
+   // Validate input
+   if (cin.fail() || row < 0 || row > 2 || col < 0 || col > 2) {
+      cin.clear(); // Clear error state
+      cin.ignore(10000, '\n'); // Discard invalid input
+      cout << "Invalid input! Row and column must be between 0 and 2.\n";
+      return false;
    }
 
-   return 0;
+   // Check if the spot is available
+   if (board[row][col] != ' ') {
+      cout << "Spot already taken! Try again.\n";
+      return false;
+   }
+
+   board[row][col] = symbol;
+   return true;
+}
+
+// Check if the current player has won
+bool checkWin(char board[3][3], char symbol) {
+    // Check rows
+    for (int i = 0; i < 3; i++) {
+        if (board[i][0] == symbol && board[i][1] == symbol && board[i][2] == symbol) {
+            return true;
+        }
+    }
+
+    // Check columns
+    for (int j = 0; j < 3; j++) {
+        if (board[0][j] == symbol && board[1][j] == symbol && board[2][j] == symbol) {
+            return true;
+        }
+    }
+
+    // Check diagonals
+    if (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol) {
+        return true;
+    }
+    if (board[0][2] == symbol && board[1][1] == symbol && board[2][0] == symbol) {
+        return true;
+    }
+
+    return false;
 }
 
 
-// display the board
-void displayBoard(char board[3][3]) {
-   for(int i=0; i<3; i++) {
-      for(int j=0; j<3; j++) {
-         cout<<board[i][j]<<" ";
+// Check if the board is full (draw condition)
+bool isBoardFull(char board[3][3]) {
+   for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+         if (board[i][j] == ' ') {
+            return false; // Found an empty spot
+         }
       }
-      cout<<endl;
    }
-}
-
-
-// function to check the board status
-void checkBoard(char a[3][3]) {
-
-   // check rows
-   i=0,j=0; // reset loop counters
-   while(i<2) {
-      while(j<1) {
-         if ( a[i][j] == ' ' ) {
-            continue;
-         }
-         else if(a[i][j]==a[i][j+1] && a[i][j]==a[i][j+2]) {
-            game = true;
-            return ;
-         }
-         j++;
-      }
-      i++;
-   }
-
-   // check columns
-   i=0,j=0; // reset loop counters
-   while(i<2) {
-      while(j<1) {
-         if ( a[i][j] == ' ' ) {
-            continue;
-         }
-         else if(a[i][j]==a[i+1][j] && a[i][j]==a[i+2][j]) {
-            game = true;
-            return ;
-         }
-         j++;
-      }
-      i++;
-   }
-
-   // check main diagonal
-   i=0,j=0; // reset loop counters
-   while(i<2) {
-      while(j<1) {
-         if ( a[i][j] == ' ' ) {
-            continue;
-         }
-         else if(a[i][j]==a[i+1][j+1]==a[i+2][j+2]) {
-            game = true;
-            return ;
-         }
-         j++;
-      }
-      i++;
-   }
-
-   // check other diagonal
-   i=0,j=2; // reset loop counters
-   while(i<2) {
-      while(j>0) {
-         if ( a[i][j] == ' ' ) {
-            continue;
-         }
-         else if(a[i][j]==a[i+1][j-1]==a[i+2][j-2]) {
-            game = true;
-            return ;
-         }
-         j--;
-      }
-      i++;
-   }
+   return true; // No empty spots
 }
