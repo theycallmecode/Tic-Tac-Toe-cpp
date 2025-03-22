@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 
+
 // Function declarations
 void fillBoard(char board[3][3]);
 void displayBoard(char board[3][3]);
@@ -20,11 +21,11 @@ int main() {
 }
 
 
-// Main game logic
+// game logic here
 void playGame() {
    char board[3][3];
    fillBoard(board);
-   int currentPlayer = 1;
+   int currentPlayer=1;
    bool gameWon = false;
 
    while(!gameWon && !isBoardFull(board)) {
@@ -59,34 +60,33 @@ void playGame() {
    cout << "Play again? (y/n): ";
    cin >> playAgain;
 
-   if (playAgain == 'y' || playAgain == 'Y') {
+   if (playAgain == 'y') {
       playGame(); // Recursive call to restart
    }
    else {
-      cout << "Thanks for playing!\n";
+      cout << "See You Next Time!\n";
    }
 }
 
 
 // Initialize the board with empty spaces
 void fillBoard(char board[3][3]) {
-   for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
+   for (int i=0; i<3; i++) {
+      for (int j=0; j<3; j++) {
          board[i][j] = ' ';
       }
    }
 }
 
 
-// Display the board with grid lines
+// Display the board
 void displayBoard(char board[3][3]) {
-   cout <<endl;
-   for (int i = 0; i < 3; i++) {
-      cout<<" "<<board[i][0]<<" | "<<board[i][1]<<" | "<<board[i][2]<<"\n";
-      
-      if (i < 2) cout << "-----------\n";
+   for(int i=0; i<3; i++) {
+      for(int j=0; j<3; j++) {
+         cout << board[i][j] << " ";
+      }
+      cout << endl;
    }
-   cout << endl;
 }
 
 // Handle player move with input validation
@@ -94,20 +94,20 @@ bool makeMove(char board[3][3], int player) {
    char symbol = (player == 1) ? 'X' : 'O';
    int row, col;
 
-   cout<<"Player "<<player<<" ("<<symbol<<"), enter row (0-2) and column (0-2): ";
+   cout<<"Player "<<player<<" ("<<symbol<<"), enter row and column (0-2): ";
    cin >> row >> col;
 
-   // Validate input
+   // check valid input
    if (cin.fail() || row < 0 || row > 2 || col < 0 || col > 2) {
       cin.clear(); // Clear error state
       cin.ignore(10000, '\n'); // Discard invalid input
-      cout << "Invalid input! Row and column must be between 0 and 2.\n";
+      cout << "Invalid input!\n";
       return false;
    }
 
-   // Check if the spot is available
+   // Check if the cell is available
    if (board[row][col] != ' ') {
-      cout << "Spot already taken! Try again.\n";
+      cout << "Cell already taken!\n";
       return false;
    }
 
@@ -117,29 +117,30 @@ bool makeMove(char board[3][3], int player) {
 
 // Check if the current player has won
 bool checkWin(char board[3][3], char symbol) {
-    // Check rows
-    for (int i = 0; i < 3; i++) {
-        if (board[i][0] == symbol && board[i][1] == symbol && board[i][2] == symbol) {
-            return true;
-        }
-    }
+   // Check rows
+   for (int i = 0; i < 3; i++) {
+      if (board[i][0]==symbol && board[i][1]==symbol && board[i][2]==symbol) {
+         return true;
+      }
+   }
 
-    // Check columns
-    for (int j = 0; j < 3; j++) {
-        if (board[0][j] == symbol && board[1][j] == symbol && board[2][j] == symbol) {
-            return true;
-        }
-    }
+   // Check columns
+   for (int j=0; j<3; j++) {
+      if (board[0][j]==symbol && board[1][j]==symbol && board[2][j]==symbol) {
+         return true;
+      }
+   }
 
-    // Check diagonals
-    if (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol) {
-        return true;
-    }
-    if (board[0][2] == symbol && board[1][1] == symbol && board[2][0] == symbol) {
-        return true;
-    }
+   // Check diagonals
+   if(board[0][0]==symbol && board[1][1]==symbol && board[2][2]==symbol) {
+      return true;
+   }
+   if(board[0][2]==symbol && board[1][1]==symbol && board[2][0]==symbol) {
+      return true;
+   }
 
-    return false;
+   // if no cases hit true
+   return false;
 }
 
 
